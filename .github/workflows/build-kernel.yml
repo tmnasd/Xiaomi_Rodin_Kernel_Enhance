@@ -131,6 +131,7 @@ jobs:
         run: |
           set -euo pipefail
           make_opts=(
+            ARCH=arm64
             CC="ccache clang"
             STRIP=llvm-strip
             LD=ld.lld
