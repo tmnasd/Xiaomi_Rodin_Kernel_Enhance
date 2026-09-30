@@ -130,11 +130,11 @@ jobs:
             kernel-ccache-
       - name: Disable MTE & KASAN
         run: |
-          bash scripts/config --file arch/arm64/configs/gki_defconfig -d CONFIG_ARM64_MTE
-          bash scripts/config --file arch/arm64/configs/gki_defconfig -d CONFIG_KASAN
-          bash scripts/config --file arch/arm64/configs/autofdo_gki.fragment -d CONFIG_ARM64_MTE
-          bash scripts/config --file arch/arm64/configs/autofdo_gki.fragment -d CONFIG_KASAN
-          bash scripts/config --file arch/arm64/configs/autofdo_gki.fragment -d CONFIG_MODULE_SIG_PROTECT
+          bash scripts/config --file arch/arm64/configs/gki_defconfig -d ARM64_MTE
+          bash scripts/config --file arch/arm64/configs/gki_defconfig -d KASAN
+          bash scripts/config --file arch/arm64/configs/autofdo_gki.fragment -d ARM64_MTE
+          bash scripts/config --file arch/arm64/configs/autofdo_gki.fragment -d KASAN
+          bash scripts/config --file arch/arm64/configs/autofdo_gki.fragment -d MODULE_SIG_PROTECT
       - name: Preserve KMI symbol after disabling MTE & KASAN
         run: |
           patch -p1 < <(curl -sSfL "https://github.com/tmnasd/EVONIX-Kernel/commit/7ea6b50e411936c5a5022129c8545b6545c3ddd8.patch")
