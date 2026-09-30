@@ -118,8 +118,8 @@ jobs:
 
       - name: Configure clang
         run: |
-          echo "$CLANG_DIR/bin" >> "$GITHUB_PATH"
-          "$CLANG_DIR/bin/clang" --version
+          echo "$RUNNER_TEMP/clang/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/clang/bin/clang" --version
 
       - name: Cache CCache
         uses: actions/cache@v4
