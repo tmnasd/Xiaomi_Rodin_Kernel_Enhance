@@ -78,9 +78,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/clang  # The directory where you install clang
-          key: clang-${{ github.run_id }}
-          restore-keys: |
-            clang-
+          key: clang
       - name: Download clang-r596125
         if: ${{ steps.cache-clang.outputs.cache-hit != 'true' }}
         run: |
