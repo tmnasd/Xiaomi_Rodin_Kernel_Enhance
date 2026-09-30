@@ -105,6 +105,8 @@ jobs:
         run: |
           set -euo pipefail
           # BUILD-GUIDE.md：只能用 gki_defconfig 生成用于编译的 .config
+          bash scripts/config --file arch/arm64/configs/gki_defconfig -d CONFIG_ARM64_MTE
+          bash scripts/config --file arch/arm64/configs/gki_defconfig -d CONFIG_KASAN
           make ARCH=arm64 LLVM=1 gki_defconfig
           JOBS="$(nproc)"
           echo "building with ${JOBS} jobs"
