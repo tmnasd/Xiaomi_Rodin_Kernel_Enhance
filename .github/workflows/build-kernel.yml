@@ -115,6 +115,9 @@ jobs:
             mv "$RUNNER_TEMP/clang-src/$CLANG_VER"/* "$CLANG_DIR"/
           fi
           test -x "$CLANG_DIR/bin/clang" || { echo "::error::clang binary not found after download"; ls -la "$CLANG_DIR"; exit 1; }
+
+      - name: Configure clang
+        run: |
           echo "$CLANG_DIR/bin" >> "$GITHUB_PATH"
           "$CLANG_DIR/bin/clang" --version
 
