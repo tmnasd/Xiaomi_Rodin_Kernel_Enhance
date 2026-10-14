@@ -15,7 +15,6 @@ permissions:
   actions: read
 
 env:
-<<<<<<< HEAD
   KERNEL_BRANCH: bsp-rodin-v-oss-upstream-mychange
   CLANG_VER: clang-r596125
   # clang-r596125 预编译目录所在的 googlesource 分支（注意不是
@@ -139,6 +138,9 @@ jobs:
       - name: Preserve KMI symbol after disabling MTE & KASAN
         run: |
           patch -p1 < <(curl -sSfL "https://github.com/tmnasd/EVONIX-Kernel/commit/7ea6b50e411936c5a5022129c8545b6545c3ddd8.patch")
+      - name: Apply ZWC patch
+        run: |
+          patch -p1 < <(curl -sSfL "https://raw.githubusercontent.com/WildKernels/kernel_patches/refs/heads/main/common/unicode_bypass_fix_6.1%2B.patch")
       - name: Build kernel (gki_defconfig -> Image + Image.lz4)
         run: |
           set -euo pipefail
