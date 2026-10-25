@@ -13,7 +13,6 @@
 #include "policy/feature.h"
 #include "klog.h" // IWYU pragma: keep
 #include "manager/manager_observer.h"
-#include "manager/dynamic_manager.h"
 #include "manager/throne_tracker.h"
 #include "runtime/ksud.h"
 #include "runtime/ksud_boot.h"
@@ -24,12 +23,15 @@
 #include "selinux/selinux.h"
 #include "feature/adb_root.h"
 #include "feature/selinux_hide.h"
+#include "feature/avc_spoof.h"
 #include "feature/uts_spoof.h"
 #include "feature/shell_su_adb_only.h"
 #include "hook/setuid_hook.h"
 #include "feature/sucompat.h"
 #include "feature/module_blacklist.h"
-
+#include "infra/symbol_resolver.h"
+#include "preinit/preinit.h"
+#include "extension/extension.h"
 
 // workaround for A12-5.10 kernel
 // Some third-party kernel (e.g. linegaeOS) uses wrong toolchain, which supports
@@ -106,6 +108,8 @@ int __init kernelsu_init(void)
         return -ENOSYS;
     }
 
+    ksu_init_symbol_resolver();
+
     if (spoof_release || spoof_version) {
         ksu_spoof_version(spoof_release, spoof_version);
     }
@@ -118,9 +122,13 @@ int __init kernelsu_init(void)
     ksu_sulog_init();
     ksu_adb_root_init();
     ksu_selinux_hide_init();
+    ksu_avc_spoof_init();
     ksu_shell_su_adb_only_init();
 
     ksu_supercalls_init();
+
+    ksu_extension_init();
+    ksu_extension_register_all();
 
     ksu_sucompat_init();
 
@@ -132,6 +140,8 @@ int __init kernelsu_init(void)
 
     ksu_ksud_init();
 
+    ksu_preinit_init();
+
     ksu_file_wrapper_init();
 
     return 0;
@@ -142,6 +152,7 @@ void __exit kernelsu_exit(void)
     ksu_supercalls_exit();
 
     ksu_ksud_exit();
+    ksu_preinit_exit();
 
     // Wait for any in-flight RCU readers (e.g. handler traversing allow_list)
     synchronize_rcu();
@@ -155,15 +166,15 @@ void __exit kernelsu_exit(void)
 
     ksu_shell_su_adb_only_exit();
 
+    ksu_avc_spoof_exit();
+
     ksu_selinux_hide_exit();
 
     ksu_adb_root_exit();
-
     ksu_sulog_exit();
-
     ksu_feature_exit();
-
     ksu_module_blacklist_exit();
+    ksu_extension_exit();
 
     put_cred(ksu_cred);
 }
